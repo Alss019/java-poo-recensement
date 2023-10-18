@@ -3,6 +3,7 @@ package fr.diginamic.recensement;
 import java.util.Scanner;
 
 import fr.diginamic.recensement.entites.Recensement;
+import fr.diginamic.recensement.services.IllegalChart;
 import fr.diginamic.recensement.services.RechercheDepartementsPlusPeuplees;
 import fr.diginamic.recensement.services.RecherchePopulationBorneService;
 import fr.diginamic.recensement.services.RecherchePopulationDepartementService;
@@ -25,8 +26,9 @@ public class Application {
 	 * Point d'entrée
 	 * 
 	 * @param args arguments (non utilisés ici)
+	 * @throws IllegalChart 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IllegalChart {
 		Scanner scanner = new Scanner(System.in);
 
 		String filePath = ClassLoader.getSystemClassLoader().getResource("recensement.csv").getFile();
@@ -53,8 +55,13 @@ public class Application {
 			// On exécute l'option correspondant au choix de l'utilisateur
 			switch (choix) {
 			case 1:
-				RecherchePopulationVilleService rechercheVille = new RecherchePopulationVilleService();
-				rechercheVille.traiter(recensement, scanner);
+				try {
+					RecherchePopulationVilleService rechercheVille = new RecherchePopulationVilleService();
+					rechercheVille.traiter(recensement, scanner);
+
+				} catch (IllegalChart e) {
+				    System.out.println("Erreur : " + e.getMessage());
+				}
 				break;
 			case 2:
 				RecherchePopulationDepartementService rechercheDept = new RecherchePopulationDepartementService();
@@ -65,8 +72,13 @@ public class Application {
 				rechercheRegion.traiter(recensement, scanner);
 				break;
 			case 4:
-				RecherchePopulationBorneService recherchePopBorne = new RecherchePopulationBorneService();
-				recherchePopBorne.traiter(recensement, scanner);
+				try {
+				    // Appel à RecherchePopulationBorneService
+					RecherchePopulationBorneService recherchePopBorne = new RecherchePopulationBorneService();
+					recherchePopBorne.traiter(recensement, scanner);
+				} catch (IllegalChart e) {
+				    System.out.println("Erreur : " + e.getMessage());
+				}
 				break;
 			case 5:
 				RechercheVillesPlusPeupleesDepartement rechercheVillesPlusPeupleesDepartement = new RechercheVillesPlusPeupleesDepartement();
